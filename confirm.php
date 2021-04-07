@@ -16,10 +16,10 @@
 
 /**
  * Confirm self registered user.
+ *
  * NOTE: based on original 'login/config.php' by Martin Dougiamas.
  *
- * @package    core
- * @subpackage auth
+ * @package    auth_emailadmin
  * @copyright  2012 Felipe Carasso http://carassonet.org
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

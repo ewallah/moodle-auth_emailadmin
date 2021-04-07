@@ -16,10 +16,8 @@
 
 /**
  * Version details
- * NOTE: Based on "email" by Martin Dougiamas (http://dougiamas.com)
  *
- * @package    auth
- * @subpackage emailadmin
+ * @package    auth_emailadmin
  * @copyright  2012 onwards Felipe Carasso (http://carassonet.org)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

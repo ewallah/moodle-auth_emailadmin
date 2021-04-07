@@ -38,7 +38,7 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configselect('auth_emailadmin/recaptcha',
         new lang_string('auth_emailadminrecaptcha_key', 'auth_emailadmin'),
         new lang_string('auth_emailadminrecaptcha', 'auth_emailadmin'), 0, $options));
-    $options = array('-1' => get_string("auth_emailadminnotif_strategy_first", "auth_emailadmin"), 
+    $options = array('-1' => get_string("auth_emailadminnotif_strategy_first", "auth_emailadmin"),
         '-2' => get_string("auth_emailadminnotif_strategy_all", "auth_emailadmin"),
         '-3' => get_string("auth_emailadminnotif_strategy_allupdate", "auth_emailadmin")
         );

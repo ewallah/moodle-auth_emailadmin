@@ -16,6 +16,7 @@
 
 /**
  * Strings for component 'auth_emailadmin', language 'en', branch 'MOODLE_20_STABLE'
+ *
  * NOTE: Based on 'email' package by Martin Dougiamas
  *
  * @package   auth_emailadmin
@@ -104,3 +105,5 @@ $string['auth_emailadminnotif_strategy_all'] = 'All admin users';
 $string['auth_emailadminnotif_strategy_allupdate'] = 'All admins and users with user update capability';
 
 $string['pluginname'] = 'Email-based self-registration with admin confirmation';
+
+$string['privacy:metadata'] = 'The Email Admin plugin does not store user data.';
