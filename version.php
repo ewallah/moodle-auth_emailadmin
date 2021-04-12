@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version   = 2030061000;        // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2017111300;        // Requires this Moodle version.
-$plugin->component = 'auth_emailadmin';      // Full name of the plugin (used for diagnostics).
+$plugin->version   = 2021041201;
+$plugin->requires  = 2017111300;
+$plugin->component = 'auth_emailadmin';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = '1.4.5';

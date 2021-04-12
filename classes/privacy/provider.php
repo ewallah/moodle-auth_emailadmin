@@ -21,7 +21,7 @@
  * @author     Sagar Ghimire <sagarghimire@catalyst-au.net>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace auth_emailamin\privacy;
+namespace auth_emailadmin\privacy;
 
 defined('MOODLE_INTERNAL') || die();
 
