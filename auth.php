@@ -23,9 +23,7 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-if (!defined('MOODLE_INTERNAL')) {
-    die('Direct access to this script is forbidden.');    // It must be included from a Moodle page.
-}
+defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
 
 require_once($CFG->libdir.'/authlib.php');
 require_once($CFG->libdir.'/accesslib.php');
@@ -49,16 +47,15 @@ class auth_plugin_emailadmin extends auth_plugin_base {
     }
 
     /**
-     * Returns true if the username and password work and false if they are
-     * wrong or don't exist.
+     * Returns true if the username and password work.
      *
      * @param string $username The username
      * @param string $password The password
      * @return bool Authentication success or failure.
      */
-    public function user_login ($username, $password) {
+    public function user_login($username, $password) {
         global $CFG, $DB;
-        if ($user = $DB->get_record('user', array('username' => $username, 'mnethostid' => $CFG->mnet_localhost_id))) {
+        if ($user = $DB->get_record('user', ['username' => $username, 'mnethostid' => $CFG->mnet_localhost_id])) {
             return validate_internal_user_password($user, $password);
         }
         return false;
@@ -95,7 +92,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
      * @param object $user new user object
      * @param boolean $notify print notice with link and terminate
      */
-    public function user_signup($user, $notify=true) {
+    public function user_signup($user, $notify = true) {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/user/profile/lib.php');
 
@@ -106,20 +103,17 @@ class auth_plugin_emailadmin extends auth_plugin_base {
         // Save any custom profile field information.
         profile_save_data($user);
 
-        $user = $DB->get_record('user', array('id' => $user->id));
+        $user = $DB->get_record('user', ['id' => $user->id]);
 
         $usercontext = context_user::instance($user->id);
-        $event = \core\event\user_created::create(
-            array(
-                'objectid' => $user->id,
-                'relateduserid' => $user->id,
-                'context' => $usercontext
-                )
-            );
+        $event = \core\event\user_created::create([
+                    'objectid' => $user->id,
+                    'relateduserid' => $user->id,
+                    'context' => $usercontext]);
         $event->trigger();
 
         if (! $this->send_confirmation_email_support($user)) {
-            print_error('auth_emailadminnoemail', 'auth_emailadmin');
+            throw new \moodle_error(get_string('emailadminnoemail', 'auth_emailadmin'));
         }
 
         if ($notify) {
@@ -228,7 +222,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
      * @return bool
      */
     public function is_captcha_enabled() {
-        return get_config("auth_{$this->authtype}", 'recaptcha');
+        return (bool)get_config("auth_{$this->authtype}", 'recaptcha');
     }
 
     /**
@@ -241,6 +235,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
     public function send_confirmation_email_support($user) {
         global $CFG;
         $config = $this->config;
+        $uselang = $CFG->lang ?? 'en';
 
         $site = get_site();
         $supportuser = core_user::get_support_user();
@@ -289,7 +284,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
         // Send message to fist admin (main) only. Remove "break" for all admins.
         $sendlist = array();
         foreach ($admins as $admin) {
-            error_log(print_r( $config->notif_strategy . ":" . $admin->id, true ));
+            mtrace($config->notif_strategy . ':' . $admin->id);
             if ($config->notif_strategy < 0 || $config->notif_strategy == $admin->id) {
                 $adminfound = true;
             }
@@ -303,8 +298,6 @@ class auth_plugin_emailadmin extends auth_plugin_base {
 
         $errors = array();
         foreach ($sendlist as $admin) {
-            $uselang = \auth\emailadmin\message::get_user_language($admin);
-
             $subject = get_string_manager()->get_string('auth_emailadminconfirmationsubject',
                                                         'auth_emailadmin',
                                                         format_string($site->fullname),
@@ -333,11 +326,9 @@ class auth_plugin_emailadmin extends auth_plugin_base {
         }
 
         if ($error != '') {
-            error_log($error);
+            error_log($error); // @codingStandardsIgnoreLine
             foreach ($admins as $admin) {
                 if (!in_array($admin->username, $errors)) {
-                    $uselang = \auth\emailadmin\message::get_user_language($admin);
-
                     $subject = get_string_manager()->get_string('auth_emailadminconfirmationsubject',
                                                                 'auth_emailadmin',
                                                                 format_string($site->fullname),
@@ -354,13 +345,14 @@ class auth_plugin_emailadmin extends auth_plugin_base {
             }
         }
 
-        return $return;
+        return (bool)$return;
     }
 
     /**
-     * Return an array with custom user properties.
+     * Return a string with custom user properties.
      *
      * @param object $user
+     * @return string
      */
     public function list_custom_fields($user) {
         $result = '';

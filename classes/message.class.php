@@ -38,36 +38,14 @@ require_once($CFG->libdir.'/authlib.php');
 class message {
 
     /**
-     * Gets user language.
-     *
-     * @param user $user A $USER object
-     * @return string
-     */
-    public static function get_user_language($user) {
-        global $USER, $COURSE, $SESSION;
-        $langhack = new \stdClass();
-        $langhack->forcelang = $user->lang;
-        $langhack->lang = $user->lang;
-        $hackbackup = ['USER' => false, 'COURSE' => false, 'SESSION' => false];
-        foreach ($hackbackup as $key => $value) {
-            $hackbackup[$key] = $GLOBALS[$key];
-            $GLOBALS[$key] = $langhack;
-        }
-        $uselang = current_language();
-        foreach ($hackbackup as $key => $value) {
-            $GLOBALS[$key] = $value;
-        }
-        return $uselang;
-    }
-
-    /**
      * Sends user confirmation.
      *
      * @param user $user A $USER object
      * @return string
      */
     public static function send_confirmation_email_user($user) {
-        global $CFG;
+        global $CFG, $DB, $USER;
+        $language = ($user->id == $USER->id) ? current_language() : $DB->get_field('user', 'lang', ['id' => $user->id]);
 
         $site = get_site();
         $supportuser = \core_user::get_support_user();
@@ -77,21 +55,19 @@ class message {
         $data->sitename = format_string($site->fullname);
         $data->admin = generate_email_signoff();
 
-        $uselang = self::get_user_language($user);
         $subject = get_string_manager()->get_string('auth_emailadminconfirmationsubject', 'auth_emailadmin',
-           format_string($site->fullname), $uselang);
+           format_string($site->fullname), $language);
 
         $username = urlencode($user->username);
         $username = str_replace('.', '%2E', $username); // Prevent problems with trailing dots.
         $data->link  = $CFG->wwwroot;
         $data->username = $username;
-        $message = get_string_manager()->get_string('auth_emailadminuserconfirmation', 'auth_emailadmin', $data, $uselang);
+        $message = get_string_manager()->get_string('auth_emailadminuserconfirmation', 'auth_emailadmin', $data, $language);
         $messagehtml = text_to_html(get_string('auth_emailadminuserconfirmation', 'auth_emailadmin', $data), false, false, true);
 
         $user->mailformat = 1;  // Always send HTML version as well.
 
         // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
-
         return email_to_user($user, $supportuser, $subject, $message, $messagehtml);
     }
 }

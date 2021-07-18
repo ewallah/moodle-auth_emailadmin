@@ -15,23 +15,35 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * No authentication plugin upgrade code
+ * EmailAdmin auth privacy tests.
  *
  * @package   auth_emailadmin
- * @copyright 2019 Felipe Carasso
+ * @copyright Renaat Debleu <info@eWallah.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace auth_emailadmin\privacy;
+
 defined('MOODLE_INTERNAL') || die();
 
-/**
- * Function to upgrade auth_email.
- *
- * @param int $oldversion the version we are upgrading from
- * @return bool result
- */
-function xmldb_auth_emailadmin_upgrade($oldversion) {
-    global $CFG, $DB;
+use \core_privacy\tests\provider_testcase;
 
-    return true;
+/**
+ * EmailAdmin auth privacy tests.
+ *
+ * @package   auth_emailadmin
+ * @copyright Renaat Debleu <info@eWallah.net>
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class privacy_testcase extends provider_testcase {
+
+    /**
+     * Test returning metadata.
+     */
+    public function test_get_metadata() {
+        $collection = new \core_privacy\local\metadata\collection('auth_emailadmin');
+        $reason = \auth_emailadmin\privacy\provider::get_reason($collection);
+        $this->assertEquals($reason, 'privacy:metadata');
+        $this->assertStringContainsString('does not store', get_string($reason, 'auth_emailadmin'));
+    }
 }
