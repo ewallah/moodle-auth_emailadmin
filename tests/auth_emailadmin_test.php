@@ -97,7 +97,6 @@ class auth_emailadmin_testcase extends advanced_testcase {
         $user->email = 'newemail@moodle.org';
         $user->username = 'newemail@moodle.org';
         $this->assertEquals(2, $auth->user_signup($user, false));
-        $output = ob_get_contents();
         $this->assertTrue($auth->send_confirmation_email_support($user));
         ob_end_clean();
         $this->assertGreaterThanOrEqual(0, count($sink->get_messages()));
