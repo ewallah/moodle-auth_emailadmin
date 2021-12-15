@@ -116,7 +116,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
 
         // Save any custom profile field information.
         profile_save_data($user);
-
+        
         $user = $DB->get_record('user', ['id' => $user->id]);
 
         $usercontext = context_user::instance($user->id);
@@ -131,7 +131,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
         }
 
         if ($notify) {
-            global $CFG, $PAGE, $OUTPUT;
+            global $PAGE, $OUTPUT;
             $emailconfirm = get_string('emailconfirm');
             $PAGE->navbar->add($emailconfirm);
             $PAGE->set_title($emailconfirm);
@@ -298,7 +298,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
         // Send message to fist admin (main) only. Remove "break" for all admins.
         $sendlist = array();
         foreach ($admins as $admin) {
-            mtrace($config->notif_strategy . ':' . $admin->id);
+            // mtrace($config->notif_strategy . ':' . $admin->id);
             if ($config->notif_strategy < 0 || $config->notif_strategy == $admin->id) {
                 $adminfound = true;
             }
@@ -355,11 +355,13 @@ class auth_plugin_emailadmin extends auth_plugin_base {
                     $messagehtml = text_to_html($message, false, false, true);
 
                     $result = email_to_user($admin, $supportuser, $subject, $message, $messagehtml);
+                    print_object($result);
                 }
             }
+            return false;
         }
 
-        return (bool)$return;
+        return true;
     }
 
     /**

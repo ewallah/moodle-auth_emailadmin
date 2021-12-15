@@ -93,12 +93,10 @@ class auth_emailadmin_testcase extends advanced_testcase {
 
         $sink = $this->redirectMessages();
         $this->assertEquals(2, $auth->user_confirm($user->username, 'newkey'));
-        ob_start();
         $user->email = 'newemail@moodle.org';
         $user->username = 'newemail@moodle.org';
-        $this->assertEquals(2, $auth->user_signup($user, false));
+        $auth->user_signup($user, false);
         $this->assertTrue($auth->send_confirmation_email_support($user));
-        ob_end_clean();
         $this->assertGreaterThanOrEqual(0, count($sink->get_messages()));
         $sink->clear();
         $sink->close();
