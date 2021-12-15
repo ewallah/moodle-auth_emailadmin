@@ -116,7 +116,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
 
         // Save any custom profile field information.
         profile_save_data($user);
-        
+
         $user = $DB->get_record('user', ['id' => $user->id]);
 
         $usercontext = context_user::instance($user->id);
@@ -167,7 +167,6 @@ class auth_plugin_emailadmin extends auth_plugin_base {
                 return AUTH_CONFIRM_ALREADY;
 
             } else if ($user->auth != $this->authtype) {
-                mtrace("Auth mismatch for user ". $user->username .": ". $user->auth ." != ". $this->authtype);
                 return AUTH_CONFIRM_ERROR;
 
             } else if ($user->secret == $confirmsecret) {   // They have provided the secret key to get in.
@@ -179,7 +178,6 @@ class auth_plugin_emailadmin extends auth_plugin_base {
                 return AUTH_CONFIRM_OK;
             }
         } else {
-            mtrace("User not found: ". $username);
             return AUTH_CONFIRM_ERROR;
         }
     }
@@ -254,7 +252,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
         $site = get_site();
         $supportuser = core_user::get_support_user();
 
-        $data = array();
+        $data = [];
 
         // Text compilation of all user fields except the password.
         $data["userdata"] = '';
@@ -265,11 +263,11 @@ class auth_plugin_emailadmin extends auth_plugin_base {
                 continue;
             }
 
-            $data[$dataname]      = $datavalue;
-            $data["userdata"]      .= $dataname . ': ' . $datavalue . PHP_EOL;
+            $data[$dataname] = $datavalue;
+            $data["userdata"] = $dataname . ': ' . $datavalue . PHP_EOL;
         }
-        $data["sitename"]  = format_string($site->fullname);
-        $data["admin"]     = generate_email_signoff();
+        $data["sitename"] = format_string($site->fullname);
+        $data["admin"] = generate_email_signoff();
 
         // Add custom fields.
         $data["customfields"] = $this->list_custom_fields($user);
@@ -283,22 +281,18 @@ class auth_plugin_emailadmin extends auth_plugin_base {
         // Directly email rather than using the messaging system to ensure its not routed to a popup or jabber.
         $admins = get_admins();
 
-        if (!isset($config->notif_strategy)) {
-            $config->notif_strategy = -1;
-        }
+        $config->notif_strategy = $config->notif_strategy ?? -1;
         $config->notif_strategy = intval($config->notif_strategy);
 
         if ($config->notif_strategy == -3 || $config->notif_strategy >= 0) {
             $admins = array_merge($admins, get_users_by_capability(context_system::instance(), 'moodle/user:update'));
         }
 
-        $return = false;
         $adminfound = false;
 
         // Send message to fist admin (main) only. Remove "break" for all admins.
-        $sendlist = array();
+        $sendlist = [];
         foreach ($admins as $admin) {
-            // mtrace($config->notif_strategy . ':' . $admin->id);
             if ($config->notif_strategy < 0 || $config->notif_strategy == $admin->id) {
                 $adminfound = true;
             }
@@ -310,19 +304,17 @@ class auth_plugin_emailadmin extends auth_plugin_base {
             }
         }
 
-        $errors = array();
+        $errors = [];
+        $subject = get_string_manager()->get_string('auth_emailadminconfirmationsubject',
+                                                    'auth_emailadmin',
+                                                    format_string($site->fullname),
+                                                    $uselang);
+
+        $message = get_string_manager()->get_string('auth_emailadminconfirmation', 'auth_emailadmin', $data, $uselang);
+        $messagehtml = text_to_html($message, false, false, true);
+
         foreach ($sendlist as $admin) {
-            $subject = get_string_manager()->get_string('auth_emailadminconfirmationsubject',
-                                                        'auth_emailadmin',
-                                                        format_string($site->fullname),
-                                                        $uselang);
-
-            $message = get_string_manager()->get_string('auth_emailadminconfirmation', 'auth_emailadmin', $data, $uselang);
-            $messagehtml = text_to_html($message, false, false, true);
-
-            $result = email_to_user($admin, $supportuser, $subject, $message, $messagehtml);
-            $return |= $result;
-            if (! $result) {
+            if (! email_to_user($admin, $supportuser, $subject, $message, $messagehtml)) {
                 $errors[] = $admin->username;
             }
         }
@@ -341,21 +333,19 @@ class auth_plugin_emailadmin extends auth_plugin_base {
 
         if ($error != '') {
             error_log($error); // @codingStandardsIgnoreLine
+            $subject = get_string_manager()->get_string('auth_emailadminconfirmationsubject',
+                                                        'auth_emailadmin',
+                                                        format_string($site->fullname),
+                                                        $uselang);
+
+            $message = get_string_manager()->get_string('auth_emailadminconfirmation',
+                                                        'auth_emailadmin',
+                                                        $data,
+                                                        $uselang);
+            $messagehtml = text_to_html($message, false, false, true);
             foreach ($admins as $admin) {
                 if (!in_array($admin->username, $errors)) {
-                    $subject = get_string_manager()->get_string('auth_emailadminconfirmationsubject',
-                                                                'auth_emailadmin',
-                                                                format_string($site->fullname),
-                                                                $uselang);
-
-                    $message = get_string_manager()->get_string('auth_emailadminconfirmation',
-                                                                'auth_emailadmin',
-                                                                $data,
-                                                                $uselang);
-                    $messagehtml = text_to_html($message, false, false, true);
-
-                    $result = email_to_user($admin, $supportuser, $subject, $message, $messagehtml);
-                    print_object($result);
+                    email_to_user($admin, $supportuser, $subject, $message, $messagehtml);
                 }
             }
             return false;

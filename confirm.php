@@ -24,7 +24,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require('../../config.php');
+require_once('../../config.php');
 require_once($CFG->libdir.'/authlib.php');
 require_once($CFG->libdir.'/adminlib.php');
 
@@ -33,19 +33,16 @@ require_capability('moodle/user:update', context_system::instance());
 
 $data = optional_param('data', '', PARAM_RAW);  // Formatted as:  secret/username.
 
-$p = optional_param('p', '', PARAM_ALPHANUM);   // Old parameter:  secret.
-$s = optional_param('s', '', PARAM_RAW);        // Old parameter:  username.
-
 $PAGE->set_url('/auth/emailadmin/confirm.php');
 $PAGE->set_context(context_system::instance());
 
 if (empty($CFG->registerauth)) {
-    print_error('cannotusepage2');
+    throw new \moodle_exception('cannotusepage2');
 }
 $authplugin = get_auth_plugin($CFG->registerauth);
 
 if (!$authplugin->can_confirm()) {
-    print_error('cannotusepage2');
+    throw new \moodle_exception('cannotusepage2');
 }
 
 if (!empty($data) || (!empty($p) && !empty($s))) {
@@ -54,9 +51,6 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         $dataelements = explode('/', $data, 2); // Stop after 1st slash. Rest is username. MDL-7647.
         $usersecret = $dataelements[0];
         $username   = $dataelements[1];
-    } else {
-        $usersecret = $p;
-        $username   = $s;
     }
 
     $confirmed = $authplugin->user_confirm($username, $usersecret);
@@ -80,7 +74,7 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         // The admin confirmed the account.
 
         if (!$user = get_complete_user_data('username', $username)) {
-            print_error('cannotfinduser', '', '', s($username));
+            throw new \moodle_exception('cannotfinduser', '', '', s($username));
         }
 
         $PAGE->navbar->add(get_string("confirmed"));
@@ -95,11 +89,10 @@ if (!empty($data) || (!empty($p) && !empty($s))) {
         echo $OUTPUT->footer();
         exit;
     } else {
-        mtrace("Confirm returned: ". $confirmed);
-        print_error('invalidconfirmdata');
+        throw new \moodle_exception('invalidconfirmdata');
     }
 } else {
-    print_error("errorwhenconfirming");
+    throw new \moodle_exception('errorwhenconfirming');
 }
 
 redirect("$CFG->wwwroot/");

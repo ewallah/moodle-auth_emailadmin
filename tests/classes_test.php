@@ -22,6 +22,9 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+
+namespace auth_emailadmin;
+
 defined('MOODLE_INTERNAL') || die();
 
 
@@ -32,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2021 Renaat Debleu <info@eWallah.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class auth_emailadmin_testcase extends advanced_testcase {
+class classes_test extends \advanced_testcase {
 
     /**
      * Set up for every test
@@ -66,16 +69,16 @@ class auth_emailadmin_testcase extends advanced_testcase {
      * Test class.
      */
     public function test_class() {
-        global $CFG;
+        global $CFG, $DB, $COURSE, $OUTPUT, $PAGE;
 
         $CFG->defaultcity = 'Bcn';
         $CFG->country = 'ES';
         $CFG->sitepolicy = 'https://moodle.org';
         $datagenerator = $this->getDataGenerator();
-        $user = $datagenerator->create_user();
+        $user = $datagenerator->create_user(['auth' => 'emailadmin']);
         $user->mnethostid = $CFG->mnet_localhost_id;
 
-        $auth = new auth_plugin_emailadmin();
+        $auth = new \auth_plugin_emailadmin();
         $this->assertFalse($auth->user_login('a', 'b'));
         $this->assertFalse($auth->user_login(fullname($user), 'b'));
         $this->assertFalse($auth->user_login($user->username, 'b'));
@@ -92,7 +95,8 @@ class auth_emailadmin_testcase extends advanced_testcase {
         $this->assertEquals(null, $auth->change_password_url());
 
         $sink = $this->redirectMessages();
-        $this->assertEquals(2, $auth->user_confirm($user->username, 'newkey'));
+        $this->assertEquals(AUTH_CONFIRM_ALREADY, $auth->user_confirm($user->username, 'newkey'));
+        $DB->set_field("user", "confirmed", 0, ["id" => $user->id]);
         $user->email = 'newemail@moodle.org';
         $user->username = 'newemail@moodle.org';
         $auth->user_signup($user, false);
@@ -100,5 +104,11 @@ class auth_emailadmin_testcase extends advanced_testcase {
         $this->assertGreaterThanOrEqual(0, count($sink->get_messages()));
         $sink->clear();
         $sink->close();
+        $this->setAdminUser();
+        chdir($CFG->dirroot . '/auth/emailadmin');
+        $_POST['data'] = "newkey/newuser";
+        $this->expectException(\moodle_exception::class);
+        $this->expectExceptionMessage('Invalid confirmation data');
+        include($CFG->dirroot . '/auth/emailadmin/confirm.php');
     }
 }
