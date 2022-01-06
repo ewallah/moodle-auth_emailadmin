@@ -19,6 +19,7 @@ Feature: User must accept policy when logging in using auth_emailadmin
       | Email (again) | user1@address.invalid |
       | First name    | User1                 |
       | Surname       | L1                    |
+    # And I click on "Create new account" "link"
     And I press "Create my new account"
     And I should see "Confirm your account"
     And I should see "Your account has been registered and is pending confirmation by the administrator."
