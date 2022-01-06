@@ -14,7 +14,7 @@ jobs:
         database: ['mysqli']
         include:
         - php: 8.0
-          moodle-branch: MOODLE_311_STABLE
+          moodle-branch: master
           database: mysqli
 
     name: ${{ matrix.moodle-branch }}  php ${{ matrix.php }}  ${{ matrix.database }}
@@ -31,6 +31,7 @@ jobs:
           php-version: ${{ matrix.php }}
           extensions: mbstring, pgsql, mysqli, gd, xmlrpc, zip
           ini-values: max_input_vars=5000
+          coverage: xdebug
  
       - name: composer
         run: |
@@ -38,6 +39,7 @@ jobs:
            echo $(cd ci/bin; pwd) >> $GITHUB_PATH
            echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
            sudo locale-gen en_AU.UTF-8
+           sed -i 's/phpdbg -d memory_limit=-1 -qrr//g' ci/src/Command/PHPUnitCommand.php
            sudo systemctl start mysql.service
 
       - name: install Moodle
@@ -83,7 +85,6 @@ jobs:
         run: moodle-plugin-ci --ansi mustache
 
       - name: phpunit
-        continue-on-error: true
         if: ${{ always() }}
         run: moodle-plugin-ci --ansi phpunit --coverage-text
 
