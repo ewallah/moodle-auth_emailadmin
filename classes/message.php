@@ -22,11 +22,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace auth\emailadmin;
+namespace auth_emailadmin;
 
-defined('MOODLE_INTERNAL') || die();
-
-require_once($CFG->libdir.'/authlib.php');
+use core_user;
+use stdClass;
 
 /**
  * Message class for auth-emailadmin plugin.
@@ -45,12 +44,13 @@ class message {
      */
     public static function send_confirmation_email_user($user) {
         global $CFG, $DB, $USER;
+        require_once($CFG->libdir . '/authlib.php');
         $language = ($user->id == $USER->id) ? current_language() : $DB->get_field('user', 'lang', ['id' => $user->id]);
 
         $site = get_site();
-        $supportuser = \core_user::get_support_user();
+        $supportuser = core_user::get_support_user();
 
-        $data = new \stdClass();
+        $data = new stdClass();
         $data->firstname = fullname($user);
         $data->sitename = format_string($site->fullname);
         $data->admin = generate_email_signoff();

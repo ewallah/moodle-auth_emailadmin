@@ -23,12 +23,12 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
-defined('MOODLE_INTERNAL') || die('Direct access to this script is forbidden.');
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/authlib.php');
 require_once($CFG->libdir.'/accesslib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
-require_once('classes/message.class.php');
+
 
 /**
  * Email authentication plugin.
@@ -174,7 +174,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
                 if ($user->firstaccess == 0) {
                     $DB->set_field("user", "firstaccess", time(), array("id" => $user->id));
                 }
-                \auth\emailadmin\message::send_confirmation_email_user($user);
+                \auth_emailadmin\message::send_confirmation_email_user($user);
                 return AUTH_CONFIRM_OK;
             }
         } else {

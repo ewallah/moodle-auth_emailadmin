@@ -21,11 +21,10 @@
  * @copyright 2021 Renaat Debleu <info@eWallah.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
-
 namespace auth_emailadmin;
 
-defined('MOODLE_INTERNAL') || die();
+use advanced_testcase;
+use moodle_exception;
 
 
 /**
@@ -35,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2021 Renaat Debleu <info@eWallah.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class classes_test extends \advanced_testcase {
+class classes_test extends advanced_testcase {
 
     /**
      * Set up for every test
@@ -58,9 +57,9 @@ class classes_test extends \advanced_testcase {
         $user = $datagenerator->create_user();
         $user->mnethostid = $CFG->mnet_localhost_id;
         $sink = $this->redirectMessages();
-        \auth\emailadmin\message::send_confirmation_email_user($user);
+        message::send_confirmation_email_user($user);
         $this->assertGreaterThanOrEqual(0, count($sink->get_messages()));
-        \auth\emailadmin\message::send_confirmation_email_user($USER);
+        message::send_confirmation_email_user($USER);
         $sink->clear();
         $sink->close();
     }
@@ -107,7 +106,7 @@ class classes_test extends \advanced_testcase {
         $this->setAdminUser();
         chdir($CFG->dirroot . '/auth/emailadmin');
         $_POST['data'] = "newkey/newuser";
-        $this->expectException(\moodle_exception::class);
+        $this->expectException(moodle_exception::class);
         $this->expectExceptionMessage('Invalid confirmation data');
         include($CFG->dirroot . '/auth/emailadmin/confirm.php');
     }
