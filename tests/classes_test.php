@@ -18,7 +18,8 @@
  * Auth emailadmin external functions tests.
  *
  * @package   auth_emailadmin
- * @copyright 2021 Renaat Debleu <info@eWallah.net>
+ * @copyright 2012 onwards Felipe Carasso (http://carassonet.org)
+ * @author    Renaat Debleu <info@eWallah.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace auth_emailadmin;
@@ -31,7 +32,8 @@ use moodle_exception;
  * Auth emailadmin external functions tests.
  *
  * @package   auth_emailadmin
- * @copyright 2021 Renaat Debleu <info@eWallah.net>
+ * @copyright 2012 onwards Felipe Carasso (http://carassonet.org)
+ * @author    Renaat Debleu <info@eWallah.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class classes_test extends advanced_testcase {

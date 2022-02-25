@@ -18,7 +18,8 @@
  * EmailAdmin auth privacy tests.
  *
  * @package   auth_emailadmin
- * @copyright Renaat Debleu <info@eWallah.net>
+ * @copyright 2012 onwards Felipe Carasso (http://carassonet.org)
+ * @author    Renaat Debleu <info@eWallah.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
@@ -30,7 +31,8 @@ use \core_privacy\tests\provider_testcase;
  * EmailAdmin auth privacy tests.
  *
  * @package   auth_emailadmin
- * @copyright Renaat Debleu <info@eWallah.net>
+ * @copyright 2012 onwards Felipe Carasso (http://carassonet.org)
+ * @author    Renaat Debleu <info@eWallah.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class privacy_test extends provider_testcase {
