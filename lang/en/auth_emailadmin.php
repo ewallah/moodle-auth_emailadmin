@@ -36,11 +36,9 @@ Hi Moodle Admin,
 
 A new account has been requested at \'{$a->sitename}\' with  the following data:
 
-Any specific user field example:
+user->firstname: {$a->firstname}
 user->lastname: {$a->lastname}
-
-All custom fields:
-{$a->customfields}
+user->email: {$a->email}
 
 All user fields + custom fields:
 {$a->userdata}
