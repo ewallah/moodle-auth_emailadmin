@@ -50,6 +50,8 @@ class classes_test extends advanced_testcase {
 
     /**
      * Test message class.
+     * @covers \auth_plugin_emailadmin
+     * @covers \auth_emailadmin\message
      */
     public function test_message_class() {
         global $CFG, $USER;
@@ -68,6 +70,7 @@ class classes_test extends advanced_testcase {
 
     /**
      * Test class.
+     * @covers \auth_plugin_emailadmin
      */
     public function test_class() {
         global $CFG, $DB, $COURSE, $OUTPUT, $PAGE;
@@ -84,6 +87,7 @@ class classes_test extends advanced_testcase {
         $this->assertFalse($auth->user_login(fullname($user), 'b'));
         $this->assertFalse($auth->user_login($user->username, 'b'));
         $this->assertTrue($auth->user_update_password($user, 'b'));
+        $this->assertTrue($auth->user_login($user->username, 'b'));
         $this->assertTrue($auth->can_signup());
         $this->assertTrue($auth->can_confirm());
         $this->assertTrue($auth->is_internal());

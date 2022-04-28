@@ -39,6 +39,7 @@ class privacy_test extends provider_testcase {
 
     /**
      * Test returning metadata.
+     * @covers \auth_emailadmin\privacy\provider
      */
     public function test_get_metadata() {
         $collection = new \core_privacy\local\metadata\collection('auth_emailadmin');
