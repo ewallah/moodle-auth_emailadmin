@@ -9,13 +9,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        moodle-branch: ['MOODLE_311_STABLE']
-        php: ['7.4']
+        moodle-branch: ['MOODLE_311_STABLE', 'MOODLE_400_STABLE']
+        php: ['8.0']
         database: ['mysqli']
-        include:
-        - php: 8.0
-          moodle-branch: master
-          database: mysqli
 
     name: ${{ matrix.moodle-branch }}  php ${{ matrix.php }}  ${{ matrix.database }}
 
@@ -89,5 +85,5 @@ jobs:
         run: moodle-plugin-ci --ansi phpunit --coverage-text
 
       - name: behat
-        if: ${{ matrix.moodle-branch != 'master'}}
+        if: ${{ matrix.moodle-branch != 'MOODLE_311_STABLE'}}
         run: moodle-plugin-ci --ansi behat --profile=chrome

@@ -29,7 +29,6 @@ require_once($CFG->libdir.'/authlib.php');
 require_once($CFG->libdir.'/accesslib.php');
 require_once($CFG->dirroot.'/user/profile/lib.php');
 
-
 /**
  * Email authentication plugin.
  * @package auth_emailadmin

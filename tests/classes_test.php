@@ -110,6 +110,9 @@ class classes_test extends advanced_testcase {
         $sink->clear();
         $sink->close();
         $this->setAdminUser();
+        $this->assertEquals($COURSE->id, 1);
+        $this->assertNotEmpty($PAGE);
+        $this->assertNotEmpty($OUTPUT);
         chdir($CFG->dirroot . '/auth/emailadmin');
         $_POST['data'] = "newkey/newuser";
         $this->expectException(moodle_exception::class);
