@@ -10,7 +10,7 @@ Feature: User must accept policy when logging in using auth_emailadmin
       | passwordpolicy  | 0          |
     And I am on site homepage
     And I follow "Log in"
-    When I press "Create new account"
+    And I click on "Create new account" "link"
     Then I should not see "I understand and agree"
     And I set the following fields to these values:
       | Username      | user1                 |
@@ -19,7 +19,6 @@ Feature: User must accept policy when logging in using auth_emailadmin
       | Email (again) | user1@address.invalid |
       | First name    | User1                 |
       | Surname       | L1                    |
-    # And I click on "Create new account" "link"
     And I press "Create my new account"
     And I should see "Confirm your account"
     And I should see "Your account has been registered and is pending confirmation by the administrator."
@@ -44,7 +43,7 @@ Feature: User must accept policy when logging in using auth_emailadmin
       | sitepolicy      | https://moodle.org |
     And I am on site homepage
     And I follow "Log in"
-    When I press "Create new account"
+    And I click on "Create new account" "link"
     Then the field "I understand and agree" matches value "0"
     And I set the following fields to these values:
       | Username      | user1                 |
