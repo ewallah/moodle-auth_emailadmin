@@ -9,8 +9,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        moodle-branch: ['MOODLE_311_STABLE']
-        php: ['7.4']
+        moodle-branch: ['MOODLE_311_STABLE', 'MOODLE_400_STABLE']
+        php: ['7.4', '8.0']
         database: ['mysqli']
         include:
         - php: 8.0
@@ -21,9 +21,18 @@ jobs:
 
     steps:
       - name: checkout plugin
+        if: ${{ matrix.moodle-branch == 'MOODLE_311_STABLE'}}
         uses: actions/checkout@v3
         with:
           path: this-plugin
+          ref: main
+
+      - name: checkout plugin
+        if: ${{ matrix.moodle-branch == 'MOODLE_400_STABLE'}}
+        uses: actions/checkout@v3
+        with:
+          path: this-plugin
+          ref: MOODLE_400_STABLE
 
       - name: setup PHP
         uses: shivammathur/setup-php@v2

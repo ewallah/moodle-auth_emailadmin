@@ -50,6 +50,7 @@ class classes_test extends advanced_testcase {
 
     /**
      * Test message class.
+     * @covers \auth_emailadmin\message
      */
     public function test_message_class() {
         global $CFG, $USER;
@@ -68,6 +69,7 @@ class classes_test extends advanced_testcase {
 
     /**
      * Test class.
+     * @covers \auth_plugin_emailadmin
      */
     public function test_class() {
         global $CFG, $DB, $COURSE, $OUTPUT, $PAGE;
