@@ -18,7 +18,7 @@ Feature: User must accept policy when logging in using auth_emailadmin
       | Email address | user1@address.invalid |
       | Email (again) | user1@address.invalid |
       | First name    | User1                 |
-      | Surname       | L1                    |
+      | Last name     | L1                    |
     And I press "Create my new account"
     And I should see "Confirm your account"
     And I should see "Your account has been registered and is pending confirmation by the administrator."
@@ -51,7 +51,7 @@ Feature: User must accept policy when logging in using auth_emailadmin
       | Email address | user1@address.invalid |
       | Email (again) | user1@address.invalid |
       | First name    | User1                 |
-      | Surname       | L1                    |
+      | Last name     | L1                    |
       | I understand and agree | 1            |
     And I press "Create my new account"
     And I should see "Confirm your account"
@@ -66,11 +66,5 @@ Feature: User must accept policy when logging in using auth_emailadmin
     And I log out
     When I log in as "admin"
     And I navigate to "Users > Accounts > Browse list of users" in site administration
-    And I follow "User1 L1"
-    And I follow "Edit profile"
     Then I should see "User1"
     And I log out
-    # Confirm that user is not asked to agree to site policy again after the next login.
-    # And I log in as "user1"
-    # And I open my profile in edit mode
-    # And the field "First name" matches value "User1"

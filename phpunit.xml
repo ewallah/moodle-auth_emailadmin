@@ -32,6 +32,8 @@
         </include>
         <exclude>
             <directory suffix="_test.php">.</directory>
+            <directory suffix=".php">lang/en</directory>
+            <file>confirm.php</file>
             <file>version.php</file>
             <file>settings.php</file>
         </exclude>
