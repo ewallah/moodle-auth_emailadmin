@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        moodle-branch: ['MOODLE_311_STABLE', 'MOODLE_400_STABLE']
+        moodle-branch: ['MOODLE_401_STABLE']
         php: ['8.0']
         database: ['mysqli']
 
@@ -35,7 +35,6 @@ jobs:
            echo $(cd ci/bin; pwd) >> $GITHUB_PATH
            echo $(cd ci/vendor/bin; pwd) >> $GITHUB_PATH
            sudo locale-gen en_AU.UTF-8
-           sed -i 's/phpdbg -d memory_limit=-1 -qrr//g' ci/src/Command/PHPUnitCommand.php
            sudo systemctl start mysql.service
 
       - name: install Moodle
@@ -85,5 +84,5 @@ jobs:
         run: moodle-plugin-ci --ansi phpunit --coverage-text
 
       - name: behat
-        if: ${{ matrix.moodle-branch != 'MOODLE_311_STABLE'}}
+        if: ${{ always() }}
         run: moodle-plugin-ci --ansi behat --profile=chrome
