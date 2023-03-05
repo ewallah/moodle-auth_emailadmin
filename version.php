@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die;
 
-$plugin->version   = 2030110101;
-$plugin->requires  = 2017111300;
+$plugin->version = 2030110101;
+$plugin->requires = 2017111300;
 $plugin->component = 'auth_emailadmin';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->release = '1.4.6';

@@ -60,7 +60,7 @@ class message {
 
         $username = urlencode($user->username);
         $username = str_replace('.', '%2E', $username); // Prevent problems with trailing dots.
-        $data->link  = $CFG->wwwroot;
+        $data->link = $CFG->wwwroot;
         $data->username = $username;
         $data->email = $user->email;
         $message = get_string_manager()->get_string('auth_emailadminuserconfirmation', 'auth_emailadmin', $data, $language);
