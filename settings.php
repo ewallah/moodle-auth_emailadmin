@@ -30,18 +30,18 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_heading('auth_emailadmin/pluginname', '',
         new lang_string('auth_emailadmindescription', 'auth_emailadmin')));
 
-    $options = array(
+    $options = [
         new lang_string('no'),
         new lang_string('yes'),
-    );
+    ];
 
     $settings->add(new admin_setting_configselect('auth_emailadmin/recaptcha',
         new lang_string('auth_emailadminrecaptcha_key', 'auth_emailadmin'),
         new lang_string('auth_emailadminrecaptcha', 'auth_emailadmin'), 0, $options));
-    $options = array('-1' => get_string("auth_emailadminnotif_strategy_first", "auth_emailadmin"),
+    $options = ['-1' => get_string("auth_emailadminnotif_strategy_first", "auth_emailadmin"),
         '-2' => get_string("auth_emailadminnotif_strategy_all", "auth_emailadmin"),
-        '-3' => get_string("auth_emailadminnotif_strategy_allupdate", "auth_emailadmin")
-        );
+        '-3' => get_string("auth_emailadminnotif_strategy_allupdate", "auth_emailadmin"),
+        ];
     $admins = array_merge(get_admins(), get_users_by_capability(context_system::instance(), 'moodle/user:update'));
     foreach ($admins as $admin) {
         $options[$admin->id] = $admin->username;

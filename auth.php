@@ -63,7 +63,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
                     // Trigger login failed event.
                     $event = \core\event\user_login_failed::create([
                         'userid' => $user->id,
-                        'other' => ['username' => $user->username, 'reason' => $failurereason]]);
+                        'other' => ['username' => $user->username, 'reason' => $failurereason], ]);
                     $event->trigger();
                     redirect(new moodle_url('/login/index.php'), get_string('auth_emailadminawaitingapproval', 'auth_emailadmin'));
                 } else {
@@ -122,7 +122,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
         $event = \core\event\user_created::create([
                     'objectid' => $user->id,
                     'relateduserid' => $user->id,
-                    'context' => $usercontext]);
+                    'context' => $usercontext, ]);
         $event->trigger();
 
         if (! $this->send_confirmation_email_support($user)) {
@@ -169,9 +169,9 @@ class auth_plugin_emailadmin extends auth_plugin_base {
                 return AUTH_CONFIRM_ERROR;
 
             } else if ($user->secret == $confirmsecret) {   // They have provided the secret key to get in.
-                $DB->set_field("user", "confirmed", 1, array("id" => $user->id));
+                $DB->set_field("user", "confirmed", 1, ["id" => $user->id]);
                 if ($user->firstaccess == 0) {
-                    $DB->set_field("user", "firstaccess", time(), array("id" => $user->id));
+                    $DB->set_field("user", "firstaccess", time(), ["id" => $user->id]);
                 }
                 \auth_emailadmin\message::send_confirmation_email_user($user);
                 return AUTH_CONFIRM_OK;
@@ -256,7 +256,7 @@ class auth_plugin_emailadmin extends auth_plugin_base {
         // Text compilation of all user fields except the password.
         $data["userdata"] = '';
 
-        $skip = array("userdata", "password", "secret");
+        $skip = ["userdata", "password", "secret"];
         foreach (((array) $user) as $dataname => $datavalue) {
             if ( in_array($dataname, $skip) ) {
                 continue;

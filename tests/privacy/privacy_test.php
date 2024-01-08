@@ -25,7 +25,7 @@
 
 namespace auth_emailadmin\privacy;
 
-use \core_privacy\tests\provider_testcase;
+use core_privacy\tests\provider_testcase;
 
 /**
  * EmailAdmin auth privacy tests.
