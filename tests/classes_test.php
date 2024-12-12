@@ -44,6 +44,7 @@ final class classes_test extends advanced_testcase {
     public function setUp(): void {
         global $CFG;
         require_once($CFG->dirroot . '/auth/emailadmin/auth.php');
+        parent::setUp();
         $this->resetAfterTest(true);
         $CFG->registerauth = 'emailadmin';
     }
