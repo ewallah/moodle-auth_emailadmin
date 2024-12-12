@@ -36,7 +36,7 @@ use moodle_exception;
  * @author    Renaat Debleu <info@eWallah.net>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class classes_test extends advanced_testcase {
+final class classes_test extends advanced_testcase {
 
     /**
      * Set up for every test
@@ -53,7 +53,7 @@ class classes_test extends advanced_testcase {
      * @covers \auth_plugin_emailadmin
      * @covers \auth_emailadmin\message
      */
-    public function test_message_class() {
+    public function test_message_class(): void {
         global $CFG, $USER;
 
         $this->setAdminUser();
@@ -72,7 +72,7 @@ class classes_test extends advanced_testcase {
      * Test class.
      * @covers \auth_plugin_emailadmin
      */
-    public function test_class() {
+    public function test_class(): void {
         global $CFG, $DB, $COURSE, $OUTPUT, $PAGE;
 
         $CFG->defaultcity = 'Bcn';
